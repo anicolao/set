@@ -39,6 +39,8 @@
           store.dispatch(selectCard({ playerId: state.activePlayerId, cardId: event.detail.id }));
       }
   }
+
+  const POSITIONS = ['bottom', 'top', 'left', 'right'] as const;
 </script>
 
 <div class="tabletop">
@@ -67,7 +69,7 @@
   </div>
 
   <!-- Edges -->
-  {#each ['bottom', 'top', 'left', 'right'] as pos}
+  {#each POSITIONS as pos}
      <PlayerHud 
        position={pos} 
        player={state.players.find(p => p.position === pos)}

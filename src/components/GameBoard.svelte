@@ -61,5 +61,6 @@
   
   .card-wrapper {
       /* Animation hook */
+      display: contents; 
   }
 </style>
