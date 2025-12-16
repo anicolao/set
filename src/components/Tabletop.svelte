@@ -111,12 +111,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      pointer-events: none; /* Let clicks pass through */
       z-index: 10;
       position: relative;
   }
   
-  .center > * {
-      pointer-events: auto; /* Re-enable for children (Board, Controls) */
-  }
+  /* .center > * removed as not needed */
 </style>
