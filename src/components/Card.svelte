@@ -140,6 +140,7 @@
 <style>
   .card {
     width: 100%;
+    height: 100%; /* Fill the grid cell */
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -150,10 +151,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    
+    /* Let grid control aspect ratio */
   }
   
-  .card.portrait { aspect-ratio: 2/3; }
-  .card.landscape { aspect-ratio: 3/2; }
+  /* .card.portrait { aspect-ratio: 2/3; } - REMOVED */
+  /* .card.landscape { aspect-ratio: 3/2; } - REMOVED */
   
   .card:hover {
     transform: translateY(-2px);
