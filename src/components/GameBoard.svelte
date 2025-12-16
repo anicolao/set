@@ -7,10 +7,35 @@
   export let selection: string[];
   export let orientation: 'landscape' | 'portrait' = 'portrait';
   
+
   const dispatch = createEventDispatcher();
+
+  $: count = cards.length;
+  $: isLandscape = orientation === 'landscape';
+  
+  // Dynamic columns:
+  // Portrait: 3 fixed.
+  // Landscape: 4 fixed (unless we want to grow cols? Standard Set is 3x4 or 4x3. If 15 cards -> 3x5 or 5x3).
+  // Let's stick to standard behavior:
+  // Portrait: Always 3 cols. Rows = ceil(count/3).
+  // Landscape: Always 4 cols? OR 3 rows and variable cols?
+  // User "Layout Refinement" conversation implied staying within bounds.
+  // Standard Set with 15 cards: usually 3x5.
+  // Let's implement:
+  // Portrait: 3 cols.
+  // Landscape: 4 cols (try to keep 4x3 ratio? 15 cards -> 4 cols -> 4 rows (last row 3 items)).
+  //            OR 5 cols -> 3 rows?
+  // Let's use:
+  // Portrait: 3 cols.
+  // Landscape: 4 cols.
+  
+
+
+  $: cols = isLandscape ? 4 : 3;
+  $: rows = Math.ceil(count / cols);
 </script>
 
-<div class="board {orientation}">
+<div class="board {orientation}" style="--cols: {cols}; --rows: {rows};">
   {#each cards as card (card.id)}
     <div class="card-wrapper">
       <Card 
@@ -44,28 +69,45 @@
      Width = Height * 0.5 <= 80vw => Height <= 160vw
      So Height = min(70vh, 160vw)
   */
+
+  /* 
+     Portrait: Ratio 3:4 (approx)
+     Constraint: 80vw width, 60vh height. 
+  */
   .board.portrait {
-     grid-template-columns: repeat(3, 1fr);
-     grid-template-rows: repeat(4, 1fr);
-     aspect-ratio: 1 / 2;
-     /* Strict dimensions matching 1:2 ratio constrained by 50vh height */
-     height: min(50vh, 160vw);
-     width: min(25vh, 80vw); 
+     --cols: 3;
+     --rows: 4;
+
+     aspect-ratio: var(--cols) / var(--rows);
+     
+     /* Simple constraint */
+     height: 100%;
+     width: auto;
+     max-height: 50vh;
+     max-width: 70vw;
+
+     grid-template-columns: repeat(var(--cols), 1fr);
+     grid-template-rows: repeat(var(--rows), 1fr);
   }
 
   /* 
-     Landscape: Ratio 2:1
-     Width <= 80vw
-     Height = Width * 0.5 <= 70vh => Width <= 140vh
-     So Width = min(80vw, 140vh)
+     Landscape: Ratio 4:3 (approx)
+     Constraint: 80vw width, 60vh height.
   */
   .board.landscape {
-     grid-template-columns: repeat(4, 1fr);
-     grid-template-rows: repeat(3, 1fr);
-     aspect-ratio: 2 / 1;
-     /* Strict dimensions matching 2:1 ratio constrained by 50vh height */
-     width: min(80vw, 100vh);
-     height: min(40vw, 50vh);
+     --cols: 4;
+     --rows: 3;
+
+     aspect-ratio: var(--cols) / var(--rows);
+
+     /* Simple constraint */
+     height: 100%;
+     width: auto;
+     max-height: 50vh;
+     max-width: 70vw;
+
+     grid-template-columns: repeat(var(--cols), 1fr);
+     grid-template-rows: repeat(var(--rows), 1fr);
   }
   
   .card-wrapper {

@@ -83,6 +83,7 @@
 
 <div 
   class="card {orientation} {selected ? 'selected' : ''}" 
+  data-testid={card.id}
   on:click={handleClick}
   on:keydown={(e) => e.key === 'Enter' && handleClick()}
   role="button"

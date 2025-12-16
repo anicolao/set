@@ -1,4 +1,31 @@
 export type CardShape = 'diamond' | 'squiggle' | 'pill';
+
+// Linear Congruential Generator
+let seed = Date.now();
+
+export function setSeed(newSeed: string | number) {
+    if (typeof newSeed === 'string') {
+        // Simple hash to number
+        let h = 0x811c9dc5;
+        for (let i = 0; i < newSeed.length; i++) {
+            h ^= newSeed.charCodeAt(i);
+            h = Math.imul(h, 0x01000193);
+        }
+        seed = h >>> 0;
+    } else {
+        seed = newSeed;
+    }
+}
+
+function random() {
+    // LCG constants (using congruential generator parameters from Numerical Recipies)
+    const m = 4294967296; // 2^32
+    const a = 1664525;
+    const c = 1013904223;
+
+    seed = (a * seed + c) % m;
+    return seed / m;
+}
 export type CardColor = 'red' | 'green' | 'purple';
 export type CardShading = 'solid' | 'striped' | 'open';
 export type CardCount = 1 | 2 | 3;
@@ -39,7 +66,7 @@ export function generateDeck(): Card[] {
 function shuffle<T>(array: T[]): T[] {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(random() * (i + 1));
         [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
