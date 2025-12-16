@@ -15,7 +15,7 @@
         <button class="btn" on:pointerdown|preventDefault={() => store.dispatch(dealMore())}>Deal 3</button>
         <button class="btn reset" on:pointerdown|preventDefault={() => store.dispatch(resetGame())}>Reset</button>
     </div>
-    <button class="btn exit" on:pointerdown|preventDefault={() => window.close()}>Exit</button>
+    <button class="btn exit" on:click={() => window.close()}>Exit</button>
 </div>
 
 <style>
