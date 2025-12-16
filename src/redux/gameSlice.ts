@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Card, generateDeck, isValidSet } from '../lib/game-logic';
+import { type Card, generateDeck, isValidSet, findSets } from '../lib/game-logic';
 import { v4 as uuidv4 } from 'uuid';
 
 export type PlayerPosition = 'bottom' | 'right' | 'top' | 'left';
@@ -141,6 +141,15 @@ const gameSlice = createSlice({
                 });
                 state.board = newBoard.filter(c => c !== null);
 
+                // GAME OVER CHECK
+                if (state.deck.length === 0) {
+                    const sets = findSets(state.board);
+                    if (sets.length === 0) {
+                        state.status = 'game_over';
+                        state.message = 'Game Over! No more sets.';
+                    }
+                }
+
             } else {
                 // Failure
                 if (player) player.score = Math.max(0, player.score - 1);
@@ -152,8 +161,6 @@ const gameSlice = createSlice({
             state.activePlayerId = null;
             state.selection = [];
             state.turnExpiresAt = null;
-
-            // Check for game over (optional, not requested)
         },
         expireTurn: (state) => {
             if (!state.activePlayerId) return;
@@ -181,12 +188,25 @@ const gameSlice = createSlice({
             state.board = [];
             state.selection = [];
             state.activePlayerId = null;
+            state.deck = [];
             state.players.forEach(p => p.score = 0);
             state.turnExpiresAt = null;
             state.animatingResult = null;
+        },
+        restartGame: (state) => {
+            if (state.players.length === 0) return;
+            state.deck = generateDeck();
+            state.board = state.deck.splice(0, 12);
+            state.status = 'playing';
+            state.selection = [];
+            state.activePlayerId = null;
+            state.message = 'Game Valid! Select 3 cards.';
+            state.turnExpiresAt = null;
+            state.animatingResult = null;
+            state.players.forEach(p => p.score = 0);
         }
     }
 });
 
-export const { addPlayer, startGame, selectCard, dealMore, resetGame, claimTurn, resolveTurn, expireTurn } = gameSlice.actions;
+export const { addPlayer, startGame, selectCard, dealMore, resetGame, restartGame, claimTurn, resolveTurn, expireTurn } = gameSlice.actions;
 export default gameSlice.reducer;

@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
   import { store } from '../redux/store';
-  import { addPlayer, startGame, selectCard, resetGame, dealMore, claimTurn, resolveTurn, expireTurn } from '../redux/gameSlice';
+  import { addPlayer, startGame, selectCard, dealMore, claimTurn, resolveTurn, expireTurn, resetGame, restartGame } from '../redux/gameSlice';
   import GameBoard from './GameBoard.svelte';
   import PlayerHud from './PlayerHud.svelte';
   import GameControls from './GameControls.svelte';
+  import GameOverDialog from './GameOverDialog.svelte';
   
   let innerWidth = 0;
   let innerHeight = 0;
@@ -91,6 +93,22 @@
           Start Game
         </button>
       </div>
+    {:else if state.status === 'game_over'}
+        <GameOverDialog 
+            players={state.players}
+            winnerId={[...state.players].sort((a,b) => b.score - a.score)[0]?.id} 
+            on:rematch={() => store.dispatch(restartGame())}
+            on:lobby={() => store.dispatch(resetGame())}
+        />
+        <GameBoard 
+            cards={state.board} 
+            selection={state.selection}
+            orientation={orientation}
+            invalidIds={invalidIds}
+            flyingIds={flyingIds}
+            flyDirection={flyDirection}
+            on:select={handleSelect}
+        />
     {:else}
       <GameBoard 
         cards={state.board} 

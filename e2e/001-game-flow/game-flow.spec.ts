@@ -12,7 +12,7 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
         "Verifies that players can join, start the game, and selection logic works."
     );
 
-    await page.goto('/');
+    await page.goto('/?seed=e2e-game-flow');
 
     // 1. Initial State
     const initialVerifications = [{ description: 'Lobby is visible', check: async () => { } }];

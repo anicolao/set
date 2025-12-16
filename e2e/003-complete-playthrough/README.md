@@ -56,19 +56,20 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 1 Complete](./screenshots/004-turn-1-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 3-squiggle-purple-open, 1-diamond-purple-open, 2-pill-purple-open
+- [x] Player 1 found a set: 3-diamond-green-solid, 3-pill-red-solid, 3-squiggle-purple-solid
 - [x] Cards were removed/replaced
 
 ---
 
-### 6. Turn 2 Dealt More
+### 6. Turn 2 Complete
 
-**Screenshot**: `005-turn-2-dealt-more.png`
+**Screenshot**: `005-turn-2-complete.png`
 
-![Turn 2 Dealt More](./screenshots/005-turn-2-dealt-more.png)
+![Turn 2 Complete](./screenshots/005-turn-2-complete.png)
 
 **Verifications**:
-- [x] Board size increased
+- [x] Player 2 found a set: 3-pill-purple-solid, 2-diamond-green-solid, 1-squiggle-red-solid
+- [x] Cards were removed/replaced
 
 ---
 
@@ -91,7 +92,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 4 Complete](./screenshots/007-turn-4-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 3-squiggle-green-solid, 1-squiggle-green-striped, 2-squiggle-green-open
+- [x] Player 2 found a set: 3-squiggle-red-open, 1-diamond-purple-open, 2-pill-green-open
 - [x] Cards were removed/replaced
 
 ---
@@ -103,7 +104,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 5 Complete](./screenshots/008-turn-5-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 1-diamond-red-striped, 1-pill-red-open, 1-squiggle-red-solid
+- [x] Player 1 found a set: 3-pill-green-solid, 1-pill-green-solid, 2-pill-green-solid
 - [x] Cards were removed/replaced
 
 ---
@@ -115,7 +116,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 6 Complete](./screenshots/009-turn-6-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 3-squiggle-purple-solid, 1-pill-red-solid, 2-diamond-green-solid
+- [x] Player 2 found a set: 2-diamond-purple-open, 2-squiggle-green-striped, 2-pill-red-solid
 - [x] Cards were removed/replaced
 
 ---
@@ -139,7 +140,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 8 Complete](./screenshots/011-turn-8-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 2-pill-green-solid, 1-squiggle-purple-striped, 3-diamond-red-open
+- [x] Player 2 found a set: 2-squiggle-green-solid, 3-diamond-red-open, 1-pill-purple-striped
 - [x] Cards were removed/replaced
 
 ---
@@ -151,7 +152,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 9 Complete](./screenshots/012-turn-9-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 3-squiggle-red-open, 1-pill-red-striped, 2-diamond-red-solid
+- [x] Player 1 found a set: 2-pill-green-striped, 3-squiggle-green-open, 1-diamond-green-solid
 - [x] Cards were removed/replaced
 
 ---
@@ -163,7 +164,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 10 Complete](./screenshots/013-turn-10-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 2-diamond-green-striped, 3-pill-red-open, 1-squiggle-purple-solid
+- [x] Player 2 found a set: 3-squiggle-green-striped, 1-diamond-red-solid, 2-pill-purple-open
 - [x] Cards were removed/replaced
 
 ---
@@ -175,7 +176,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 11 Complete](./screenshots/014-turn-11-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 1-pill-green-striped, 3-diamond-purple-striped, 2-squiggle-red-striped
+- [x] Player 1 found a set: 1-squiggle-purple-open, 2-pill-purple-striped, 3-diamond-purple-solid
 - [x] Cards were removed/replaced
 
 ---
@@ -187,7 +188,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 12 Complete](./screenshots/015-turn-12-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 3-pill-green-striped, 3-squiggle-green-open, 3-diamond-green-solid
+- [x] Player 2 found a set: 3-squiggle-purple-striped, 2-pill-red-striped, 1-diamond-green-striped
 - [x] Cards were removed/replaced
 
 ---
@@ -199,7 +200,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 13 Complete](./screenshots/016-turn-13-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 2-squiggle-purple-striped, 2-diamond-red-striped, 2-pill-green-striped
+- [x] Player 1 found a set: 3-pill-purple-striped, 1-squiggle-green-open, 2-diamond-red-solid
 - [x] Cards were removed/replaced
 
 ---
@@ -211,7 +212,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 14 Complete](./screenshots/017-turn-14-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 1-diamond-green-striped, 1-squiggle-red-open, 1-pill-purple-solid
+- [x] Player 2 found a set: 2-diamond-red-striped, 2-diamond-green-striped, 2-diamond-purple-striped
 - [x] Cards were removed/replaced
 
 ---
@@ -223,7 +224,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 15 Complete](./screenshots/018-turn-15-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 2-squiggle-red-solid, 2-squiggle-green-solid, 2-squiggle-purple-solid
+- [x] Player 1 found a set: 2-diamond-red-open, 3-diamond-red-solid, 1-diamond-red-striped
 - [x] Cards were removed/replaced
 
 ---
@@ -235,7 +236,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 16 Complete](./screenshots/019-turn-16-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 1-pill-green-solid, 3-squiggle-red-striped, 2-diamond-purple-open
+- [x] Player 2 found a set: 3-squiggle-purple-open, 1-squiggle-green-striped, 2-squiggle-red-solid
 - [x] Cards were removed/replaced
 
 ---
@@ -247,19 +248,20 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 17 Complete](./screenshots/020-turn-17-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 3-pill-purple-striped, 2-squiggle-red-open, 1-diamond-green-solid
+- [x] Player 1 found a set: 3-pill-green-open, 1-squiggle-red-striped, 2-diamond-purple-solid
 - [x] Cards were removed/replaced
 
 ---
 
-### 22. Turn 18 Dealt More
+### 22. Turn 18 Complete
 
-**Screenshot**: `021-turn-18-dealt-more.png`
+**Screenshot**: `021-turn-18-complete.png`
 
-![Turn 18 Dealt More](./screenshots/021-turn-18-dealt-more.png)
+![Turn 18 Complete](./screenshots/021-turn-18-complete.png)
 
 **Verifications**:
-- [x] Board size increased
+- [x] Player 2 found a set: 3-pill-green-striped, 1-diamond-purple-solid, 2-squiggle-red-open
+- [x] Cards were removed/replaced
 
 ---
 
@@ -270,7 +272,7 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 19 Complete](./screenshots/022-turn-19-complete.png)
 
 **Verifications**:
-- [x] Player 1 found a set: 2-pill-green-open, 1-squiggle-red-striped, 3-diamond-purple-solid
+- [x] Player 1 found a set: 2-squiggle-purple-striped, 1-pill-red-solid, 3-diamond-green-open
 - [x] Cards were removed/replaced
 
 ---
@@ -282,19 +284,20 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 20 Complete](./screenshots/023-turn-20-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 1-diamond-green-open, 3-diamond-red-striped, 2-diamond-purple-solid
+- [x] Player 2 found a set: 1-squiggle-green-solid, 2-squiggle-purple-solid, 3-squiggle-red-solid
 - [x] Cards were removed/replaced
 
 ---
 
-### 25. Turn 21 Dealt More
+### 25. Turn 21 Complete
 
-**Screenshot**: `024-turn-21-dealt-more.png`
+**Screenshot**: `024-turn-21-complete.png`
 
-![Turn 21 Dealt More](./screenshots/024-turn-21-dealt-more.png)
+![Turn 21 Complete](./screenshots/024-turn-21-complete.png)
 
 **Verifications**:
-- [x] Board size increased
+- [x] Player 1 found a set: 2-pill-red-open, 3-pill-red-open, 1-pill-red-open
+- [x] Cards were removed/replaced
 
 ---
 
@@ -305,19 +308,20 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 22 Complete](./screenshots/025-turn-22-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 3-pill-green-solid, 3-diamond-green-open, 3-squiggle-green-striped
+- [x] Player 2 found a set: 2-diamond-green-open, 1-pill-purple-solid, 3-squiggle-red-striped
 - [x] Cards were removed/replaced
 
 ---
 
-### 27. Turn 23 Dealt More
+### 27. Turn 23 Complete
 
-**Screenshot**: `026-turn-23-dealt-more.png`
+**Screenshot**: `026-turn-23-complete.png`
 
-![Turn 23 Dealt More](./screenshots/026-turn-23-dealt-more.png)
+![Turn 23 Complete](./screenshots/026-turn-23-complete.png)
 
 **Verifications**:
-- [x] Board size increased
+- [x] Player 1 found a set: 1-diamond-red-open, 2-squiggle-green-open, 3-pill-purple-open
+- [x] Cards were removed/replaced
 
 ---
 
@@ -328,79 +332,19 @@ Verifies a complete game playthrough with two players using a deterministic seed
 ![Turn 24 Complete](./screenshots/027-turn-24-complete.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 3-pill-green-open, 2-diamond-green-open, 1-squiggle-green-open
+- [x] Player 2 found a set: 3-diamond-red-striped, 1-pill-red-striped, 2-squiggle-red-striped
 - [x] Cards were removed/replaced
 
 ---
 
-### 29. Turn 25 Complete
+### 29. Game Over
 
-**Screenshot**: `028-turn-25-complete.png`
+**Screenshot**: `028-game-over.png`
 
-![Turn 25 Complete](./screenshots/028-turn-25-complete.png)
-
-**Verifications**:
-- [x] Player 1 found a set: 2-pill-purple-striped, 1-diamond-purple-striped, 3-squiggle-purple-striped
-- [x] Cards were removed/replaced
-
----
-
-### 30. Turn 26 Complete
-
-**Screenshot**: `029-turn-26-complete.png`
-
-![Turn 26 Complete](./screenshots/029-turn-26-complete.png)
+![Game Over](./screenshots/028-game-over.png)
 
 **Verifications**:
-- [x] Player 2 found a set: 3-pill-purple-solid, 2-squiggle-green-striped, 1-diamond-red-open
-- [x] Cards were removed/replaced
-
----
-
-### 31. Turn 27 Complete
-
-**Screenshot**: `030-turn-27-complete.png`
-
-![Turn 27 Complete](./screenshots/030-turn-27-complete.png)
-
-**Verifications**:
-- [x] Player 1 found a set: 1-squiggle-purple-open, 1-pill-purple-striped, 1-diamond-purple-solid
-- [x] Cards were removed/replaced
-
----
-
-### 32. Turn 28 Complete
-
-**Screenshot**: `031-turn-28-complete.png`
-
-![Turn 28 Complete](./screenshots/031-turn-28-complete.png)
-
-**Verifications**:
-- [x] Player 2 found a set: 3-diamond-green-striped, 3-pill-purple-open, 3-squiggle-red-solid
-- [x] Cards were removed/replaced
-
----
-
-### 33. Turn 29 Complete
-
-**Screenshot**: `032-turn-29-complete.png`
-
-![Turn 29 Complete](./screenshots/032-turn-29-complete.png)
-
-**Verifications**:
-- [x] Player 1 found a set: 2-pill-red-solid, 2-pill-red-striped, 2-pill-red-open
-- [x] Cards were removed/replaced
-
----
-
-### 34. Game Over
-
-**Screenshot**: `033-game-over.png`
-
-![Game Over](./screenshots/033-game-over.png)
-
-**Verifications**:
-- [x] Final Scores: P1=13, P2=12
+- [x] Final Scores: P1=12, P2=12
 
 ---
 

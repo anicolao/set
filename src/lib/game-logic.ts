@@ -36,10 +36,35 @@ export function generateDeck(): Card[] {
     return shuffle(deck);
 }
 
+let random = Math.random;
+
+export function setRandomSeed(seed: string | number) {
+    // Simple hash to convert string to number if needed
+    let s: number;
+    if (typeof seed === 'string') {
+        let h = 0x811c9dc5;
+        for (let i = 0; i < seed.length; i++) {
+            h ^= seed.charCodeAt(i);
+            h = Math.imul(h, 0x01000193);
+        }
+        s = h >>> 0;
+    } else {
+        s = seed;
+    }
+
+    // Mulberry32
+    random = () => {
+        let t = (s += 0x6D2B79F5);
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
 function shuffle<T>(array: T[]): T[] {
     const newArray = [...array];
     for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(random() * (i + 1));
         [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
     }
     return newArray;
