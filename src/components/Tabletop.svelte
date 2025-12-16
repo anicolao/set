@@ -5,7 +5,12 @@
   import GameBoard from './GameBoard.svelte';
   import PlayerHud from './PlayerHud.svelte';
   
-  let state = store.getState().game;
+  let innerWidth = 0;
+  let innerHeight = 0;
+  $: isLandscape = innerWidth > innerHeight;
+  $: orientation = isLandscape ? 'landscape' : 'portrait';
+
+  let state = store.getState().game; 
 
   onMount(() => {
     const unsubscribe = store.subscribe(() => {
