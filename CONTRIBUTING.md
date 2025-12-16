@@ -37,3 +37,4 @@ Before committing your changes, you must ensure:
     *   **Check Existence**: Run `gh pr list --head $(git branch --show-current)` to check for existing PRs.
     *   **Create**: `gh pr create --title "Title" --body "Description"` if none exists.
     *   **Verify**: Ensure the PR is open and linked correctly.
+    *   **Agent Responsibilities**: Agents MUST perform these steps (push and create PR) automatically. Do not ask the user to do this.
