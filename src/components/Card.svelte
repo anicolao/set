@@ -20,7 +20,7 @@
   // Shape Paths (Normalized to 100x50 box approx)
   const DIAMOND = "M 10,25 L 50,5 L 90,25 L 50,45 Z";
   const PILL = "M 15,10 L 85,10 A 15,15 0 0 1 85,40 L 15,40 A 15,15 0 0 1 15,10 Z";
-  const SQUIGGLE = "M 15,35 Q 35,5 50,25 T 85,15 Q 95,20 85,35 T 50,25 T 15,35 Z"; 
+  const SQUIGGLE = "M 15,20 C 35,0 65,50 85,20 Q 95,25 85,30 C 65,50 35,0 15,30 Q 5,25 15,20 Z"; 
 
   function getPath(shape: string) {
       if (shape === 'diamond') return DIAMOND;

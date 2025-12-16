@@ -8,7 +8,7 @@
   let innerWidth = 0;
   let innerHeight = 0;
   $: isLandscape = innerWidth > innerHeight;
-  $: orientation = isLandscape ? 'landscape' : 'portrait';
+  $: orientation = (isLandscape ? 'landscape' : 'portrait') as 'landscape' | 'portrait';
 
   let state = store.getState().game; 
 
