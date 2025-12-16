@@ -6,9 +6,9 @@ Verifies that the game board and cards strictly fit within the 80% safe zone (10
 
 ### 1. Landscape Orientation
 
-**Screenshot**: `001-landscape.png`
+**Screenshot**: `000-landscape.png`
 
-![Landscape Orientation](./screenshots/001-landscape.png)
+![Landscape Orientation](./screenshots/000-landscape.png)
 
 **Verifications**:
 - [x] Viewport set to 1280x720
@@ -18,9 +18,9 @@ Verifies that the game board and cards strictly fit within the 80% safe zone (10
 
 ### 2. Portrait Orientation
 
-**Screenshot**: `002-portrait.png`
+**Screenshot**: `001-portrait.png`
 
-![Portrait Orientation](./screenshots/002-portrait.png)
+![Portrait Orientation](./screenshots/001-portrait.png)
 
 **Verifications**:
 - [x] Viewport set to 720x1280

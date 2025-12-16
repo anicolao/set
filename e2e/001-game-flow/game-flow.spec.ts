@@ -16,12 +16,12 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
 
     // 1. Initial State
     const initialVerifications = [{ description: 'Lobby is visible', check: async () => { } }];
-    docHelper.addStep("Initial Lobby", "000-lobby.png", initialVerifications);
-    await screenshots.capture(page, "lobby", {
+    const lobbyShot = await screenshots.capture(page, "lobby", {
         programmaticCheck: async () => {
             await expect(page.locator('text=Tabletop Set')).toBeVisible();
         }
     });
+    docHelper.addStep("Initial Lobby", lobbyShot, initialVerifications);
 
     // 2. Join Players
     await page.click('.bottom button.join');
@@ -31,13 +31,13 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
         { description: 'Player 1 joined at bottom', check: async () => { } },
         { description: 'Player 2 joined at top', check: async () => { } }
     ];
-    docHelper.addStep("Players Joined", "001-joined.png", joinVerifications);
-    await screenshots.capture(page, "joined", {
+    const joinedShot = await screenshots.capture(page, "joined", {
         programmaticCheck: async () => {
             await expect(page.locator('.bottom .name')).toContainText('Player 1');
             await expect(page.locator('.top .name')).toContainText('Player 2');
         }
     });
+    docHelper.addStep("Players Joined", joinedShot, joinVerifications);
 
     // 3. Start Game
     await page.click('button:has-text("Start Game")');
@@ -46,13 +46,13 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
         { description: 'Board is visible with 12 cards', check: async () => { } },
         { description: 'Start Game button hidden', check: async () => { } }
     ];
-    docHelper.addStep("Game Started", "002-started.png", startVerifications);
-    await screenshots.capture(page, "started", {
+    const startedShot = await screenshots.capture(page, "started", {
         programmaticCheck: async () => {
             await expect(page.locator('.board')).toBeVisible();
             await expect(page.locator('.card')).toHaveCount(12);
         }
     });
+    docHelper.addStep("Game Started", startedShot, startVerifications);
 
     // 4. Select Card (Strict Mode: Must click SET first)
     // Assuming strict mode implementation:
@@ -67,8 +67,7 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
         { description: 'Player 1 is active', check: async () => { } },
         { description: 'First card is selected', check: async () => { } }
     ];
-    docHelper.addStep("Selection Active", "003-selecting.png", selectVerifications);
-    await screenshots.capture(page, "selecting", {
+    const selectingShot = await screenshots.capture(page, "selecting", {
         programmaticCheck: async () => {
             await expect(page.locator('.card').first()).toHaveClass(/selected/);
             // Verify orientation class depending on default view?
@@ -77,6 +76,7 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
             // await expect(page.locator('.card').first()).toHaveClass(/landscape/);
         }
     });
+    docHelper.addStep("Selection Active", selectingShot, selectVerifications);
 
     docHelper.writeReadme();
 });

@@ -54,34 +54,34 @@ test('Viewport Verification', async ({ page }, testInfo) => {
 
     // Wait for board to acquire landscape class (reactivity check)
     await expect(page.locator('.board')).toHaveClass(/landscape/);
-    // Wait a bit for layout reflow
-    await page.waitForTimeout(500);
 
     const landscapeVerifications = [
         { description: 'Viewport set to 1280x720', check: async () => { } },
         { description: 'All cards within 10-90% bounds', check: async () => { } }
     ];
-    docHelper.addStep("Landscape Orientation", "001-landscape.png", landscapeVerifications);
 
-    await screenshots.capture(page, "landscape", {
+    // Capture first, get filename
+    const landscapeShot = await screenshots.capture(page, "landscape", {
         programmaticCheck: async () => await verifyCardsWithinBounds(page)
     });
+
+    docHelper.addStep("Landscape Orientation", landscapeShot, landscapeVerifications);
 
     // 2. Portrait Verification
     await page.setViewportSize({ width: 720, height: 1280 });
     // Wait for board to acquire portrait class
     await expect(page.locator('.board')).toHaveClass(/portrait/);
-    await page.waitForTimeout(500); // Small buffer for layout shift
 
     const portraitVerifications = [
         { description: 'Viewport set to 720x1280', check: async () => { } },
         { description: 'All cards within 10-90% bounds', check: async () => { } }
     ];
-    docHelper.addStep("Portrait Orientation", "002-portrait.png", portraitVerifications);
 
-    await screenshots.capture(page, "portrait", {
+    const portraitShot = await screenshots.capture(page, "portrait", {
         programmaticCheck: async () => await verifyCardsWithinBounds(page)
     });
+
+    docHelper.addStep("Portrait Orientation", portraitShot, portraitVerifications);
 
     docHelper.writeReadme();
 });
