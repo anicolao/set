@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import { type Card, generateDeck, isValidSet } from '../lib/game-logic';
+
+import { type Card, generateDeck, isValidSet, findSets } from '../lib/game-logic';
 import { v4 as uuidv4 } from 'uuid';
 
 export type PlayerPosition = 'bottom' | 'right' | 'top' | 'left';
@@ -66,6 +67,7 @@ const gameSlice = createSlice({
             state.message = `${state.players.find(p => p.id === playerId)?.name} called SET!`;
             // In a real game, set a timer here
         },
+
         selectCard: (state, action: PayloadAction<{ playerId: string, cardId: string }>) => {
             if (state.status !== 'playing') return;
             const { playerId, cardId } = action.payload;
@@ -97,7 +99,6 @@ const gameSlice = createSlice({
                         // Create new board array to preserve order
                         const newBoard = [...state.board];
 
-
                         state.selection.forEach(id => {
                             const idx = newBoard.findIndex(c => c && c.id === id);
                             if (idx !== -1) {
@@ -112,6 +113,12 @@ const gameSlice = createSlice({
 
                         state.board = newBoard.filter(c => c !== null);
                         state.message = 'Set Found!';
+
+                        // Check Game Over
+                        if (state.deck.length === 0 && findSets(state.board).length === 0) {
+                            state.status = 'game_over';
+                            state.message = 'Game Over!';
+                        }
                     } else {
                         // Invalid Set
                         const player = state.players.find(p => p.id === playerId);
@@ -125,8 +132,21 @@ const gameSlice = createSlice({
             }
         },
         dealMore: (state) => {
+            // Only allowed if no sets on board
+            if (findSets(state.board).length > 0) {
+                state.message = "There is a set on the board!";
+                return;
+            }
+
             if (state.deck.length >= 3) {
                 state.board.push(...state.deck.splice(0, 3));
+            } else {
+                // Deck empty, cannot deal more.
+                // If no sets (checked above) and no deck -> Game Over
+                if (state.deck.length === 0 && findSets(state.board).length === 0) {
+                    state.status = 'game_over';
+                    state.message = 'Game Over!';
+                }
             }
         },
         resetGame: (state) => {

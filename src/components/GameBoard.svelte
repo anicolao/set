@@ -74,11 +74,17 @@
      Portrait: Ratio 3:4 (approx)
      Constraint: 80vw width, 60vh height. 
   */
+
+  /* 
+     Portrait: Ratio 3:4 (approx)
+     Constraint: 80vw width, 60vh height. 
+  */
   .board.portrait {
      --cols: 3;
      --rows: 4;
+     --card-ratio: 0.666; /* 2/3 */
 
-     aspect-ratio: var(--cols) / var(--rows);
+     aspect-ratio: calc(var(--cols) * var(--card-ratio)) / var(--rows);
      
      /* Simple constraint */
      height: 100%;
@@ -97,8 +103,9 @@
   .board.landscape {
      --cols: 4;
      --rows: 3;
+     --card-ratio: 1.5; /* 3/2 */
 
-     aspect-ratio: var(--cols) / var(--rows);
+     aspect-ratio: calc(var(--cols) * var(--card-ratio)) / var(--rows);
 
      /* Simple constraint */
      height: 100%;
