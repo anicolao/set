@@ -26,41 +26,49 @@
 <style>
   .board {
     display: grid;
-    gap: 1.5vmin; /* Use vmin for responsive gap */
-    width: 60vw;  /* Default width constraint */
-    max-width: 80vw;
-    max-height: 80vh;
-    padding: 20px;
-    background: rgba(238, 238, 238, 0.9);
-    border-radius: 12px;
-    box-sizing: border-box;
     /* Center in parent */
-    margin: auto; 
+    margin: auto;
     justify-content: center;
     align-content: center;
+    
+    gap: 2vmin;
+    padding: 0;
+    
+    /* Ensure it never overflows */
+    box-sizing: border-box;
   }
   
+  /* 
+     Portrait: Ratio 1:2 (3 cols, 4 rows * 2/3 card ratio = 6w/12h reduced to 1/2)
+     Height <= 80vh
+     Width = Height * 0.5 <= 80vw => Height <= 160vw
+     So Height = min(80vh, 160vw)
+  */
   .board.portrait {
      grid-template-columns: repeat(3, 1fr);
-     width: 80vw;
-     height: auto;
-     aspect-ratio: 3/4; /* Roughly matches 3 cols of 2:3 cards */
+     aspect-ratio: 1 / 2;
+     height: min(80vh, 160vw);
+     width: auto; 
   }
 
+  /* 
+     Landscape: Ratio 2:1 (4 cols, 3 rows * 3/2 card ratio = 12w/6h reduced to 2/1)
+     Width <= 80vw
+     Height = Width * 0.5 <= 80vh => Width <= 160vh
+     So Width = min(80vw, 160vh)
+  */
   .board.landscape {
      grid-template-columns: repeat(4, 1fr);
-     width: auto;
-     height: 80vh;
-     aspect-ratio: 4/3; /* Roughly matches 4 cols of 3:2 cards? 
-                          Wait: 4 cols * 3 width = 12. 3 rows * 2 height = 6. 
-                          Ratio = 12/6 = 2. 
-                          Let's relax aspect ratio and let grid handle it. */
-     aspect-ratio: 2/1; 
+     aspect-ratio: 2 / 1;
+     width: min(80vw, 160vh);
+     height: auto;
   }
-
   
   .card-wrapper {
-      /* Animation hook */
-      display: contents; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
   }
 </style>
