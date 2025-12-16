@@ -38,3 +38,4 @@ Before committing your changes, you must ensure:
     *   **Create**: `gh pr create --title "Title" --body "Description"` if none exists.
     *   **Verify**: Ensure the PR is open and linked correctly.
     *   **Agent Responsibilities**: Agents MUST perform these steps (push and create PR) automatically. Do not ask the user to do this.
+    *   **Visual Changes**: If your changes affect the UI, you MUST regenerate E2E screenshots (`--update-snapshots`) and include them in the commit.
