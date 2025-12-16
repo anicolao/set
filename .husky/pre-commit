@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Ban wait-For-Timeout (constructed to avoid self-match)
+TERM="waitFor"
+TERM="${TERM}Timeout"
+if git grep -q "$TERM" $(git diff --cached --name-only); then
+    echo "Error: $TERM is banned. Use assertions or explicit waits instead."
+    exit 1
+fi
