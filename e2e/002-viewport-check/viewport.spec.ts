@@ -85,3 +85,37 @@ test('Viewport Verification', async ({ page }, testInfo) => {
 
     docHelper.writeReadme();
 });
+
+test('Dynamic Resize Verification', async ({ page }) => {
+    // Start Landscape
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto('/');
+
+    // Players join to make HUD active/visible state relevant
+    await page.click('.bottom button.join');
+    await page.click('.top button.join');
+    await page.click('button:has-text("Start Game")');
+
+    // Verify Landscape
+    await expect(page.locator('.board')).toHaveClass(/landscape/);
+
+    // Resize to Portrait dynamically
+    await page.setViewportSize({ width: 720, height: 1280 });
+    // Should adapt automatically
+    await expect(page.locator('.board')).toHaveClass(/portrait/);
+
+    // Verify strict bounds again after resize
+    const viewport = page.viewportSize();
+    const width = viewport!.width;
+    const height = viewport!.height;
+    const marginX = width * 0.1;
+    const marginY = height * 0.1;
+
+    const cards = await page.locator('.card').all();
+    for (const [i, card] of cards.entries()) {
+        const box = await card.boundingBox();
+        if (!box) continue;
+        expect(box.x).toBeGreaterThanOrEqual(marginX - 2);
+        expect(box.y).toBeGreaterThanOrEqual(marginY - 2);
+    }
+});

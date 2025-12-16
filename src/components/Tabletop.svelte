@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import { store } from '../redux/store';
   import { addPlayer, startGame, selectCard, resetGame, dealMore, claimTurn } from '../redux/gameSlice';
   import GameBoard from './GameBoard.svelte';
@@ -26,6 +26,8 @@
   function handleClaimSet(event: CustomEvent) {
        // Code clean up
   }
+  
+  const dispatch = createEventDispatcher();
   
   function handleSelect(event: CustomEvent) {
       if (state.activePlayerId) {
@@ -109,10 +111,12 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      pointer-events: none;
+      pointer-events: none; /* Let clicks pass through */
+      z-index: 10;
+      position: relative;
   }
   
   .center > * {
-      pointer-events: auto;
+      pointer-events: auto; /* Re-enable for children (Board, Controls) */
   }
 </style>

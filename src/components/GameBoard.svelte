@@ -48,9 +48,9 @@
      grid-template-columns: repeat(3, 1fr);
      grid-template-rows: repeat(4, 1fr);
      aspect-ratio: 1 / 2;
-     /* Strict dimensions matching 1:2 ratio constrained by 65vh height */
-     height: min(65vh, 160vw);
-     width: min(32.5vh, 80vw); 
+     /* Strict dimensions matching 1:2 ratio constrained by 50vh height */
+     height: min(50vh, 160vw);
+     width: min(25vh, 80vw); 
   }
 
   /* 
@@ -63,9 +63,9 @@
      grid-template-columns: repeat(4, 1fr);
      grid-template-rows: repeat(3, 1fr);
      aspect-ratio: 2 / 1;
-     /* Strict dimensions matching 2:1 ratio constrained by 65vh height */
-     width: min(80vw, 130vh);
-     height: min(40vw, 65vh);
+     /* Strict dimensions matching 2:1 ratio constrained by 50vh height */
+     width: min(80vw, 100vh);
+     height: min(40vw, 50vh);
   }
   
   .card-wrapper {

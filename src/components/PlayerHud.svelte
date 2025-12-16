@@ -48,6 +48,12 @@
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     z-index: 10;
+    pointer-events: none; /* Container doesn't block; background might if opaque, but allows careful clicking */
+  }
+
+  /* Re-enable for interactive children */
+  .btn, .name, .score {
+      pointer-events: auto;
   }
   
   .bottom { bottom: 20px; left: 50%; transform-origin: center; margin-left: -100px; width: 200px; }
