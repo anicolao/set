@@ -97,8 +97,9 @@ const gameSlice = createSlice({
                         // Create new board array to preserve order
                         const newBoard = [...state.board];
 
+
                         state.selection.forEach(id => {
-                            const idx = newBoard.findIndex(c => c.id === id);
+                            const idx = newBoard.findIndex(c => c && c.id === id);
                             if (idx !== -1) {
                                 if (needsReplacement && state.deck.length > 0) {
                                     newBoard[idx] = state.deck.pop()!;
