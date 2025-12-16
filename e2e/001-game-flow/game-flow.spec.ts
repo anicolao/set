@@ -18,7 +18,7 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
     const initialVerifications = [{ description: 'Lobby is visible', check: async () => { } }];
     const lobbyShot = await screenshots.capture(page, "lobby", {
         programmaticCheck: async () => {
-            await expect(page.locator('text=Tabletop Set')).toBeVisible();
+            await expect(page.locator('h1', { hasText: 'Set' })).toBeVisible();
         }
     });
     docHelper.addStep("Initial Lobby", lobbyShot, initialVerifications);
@@ -58,7 +58,7 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
     // Assuming strict mode implementation:
     // Player 1 clicks SET
     await page.click('.bottom button.set');
-    await expect(page.locator('text=Player 1 called SET!')).toBeVisible();
+    await expect(page.locator('text=Player 1 called SET!').first()).toBeVisible();
 
     // Select 1 card
     await page.locator('.card').first().click();

@@ -5,6 +5,9 @@
   
   export let cards: CardType[];
   export let selection: string[];
+  export let invalidIds: string[] = [];
+  export let flyingIds: string[] = [];
+  export let flyDirection: 'bottom' | 'top' | 'left' | 'right' | null = null;
   export let orientation: 'landscape' | 'portrait' = 'portrait';
   
   const dispatch = createEventDispatcher();
@@ -17,6 +20,9 @@
         {card} 
         {orientation}
         selected={selection.includes(card.id)} 
+        invalid={invalidIds.includes(card.id)}
+        flying={flyingIds.includes(card.id)}
+        flyDirection={flyingIds.includes(card.id) ? flyDirection : null}
         on:click={(e) => dispatch('select', e.detail)}
       />
     </div>
