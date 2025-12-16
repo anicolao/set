@@ -15,7 +15,7 @@
 
 <div class="board {orientation}">
   {#each cards as card (card.id)}
-    <div class="card-wrapper">
+    <div class="card-wrapper" data-testid={card.id}>
       <Card 
         {card} 
         {orientation}
