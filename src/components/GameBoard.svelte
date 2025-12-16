@@ -39,29 +39,33 @@
   }
   
   /* 
-     Portrait: Ratio 1:2 (3 cols, 4 rows * 2/3 card ratio = 6w/12h reduced to 1/2)
-     Height <= 80vh
+     Portrait: Ratio 1:2
+     Height <= 70vh (Leave room for controls)
      Width = Height * 0.5 <= 80vw => Height <= 160vw
-     So Height = min(80vh, 160vw)
+     So Height = min(70vh, 160vw)
   */
   .board.portrait {
      grid-template-columns: repeat(3, 1fr);
+     grid-template-rows: repeat(4, 1fr);
      aspect-ratio: 1 / 2;
-     height: min(80vh, 160vw);
-     width: auto; 
+     /* Strict dimensions matching 1:2 ratio constrained by 65vh height */
+     height: min(65vh, 160vw);
+     width: min(32.5vh, 80vw); 
   }
 
   /* 
-     Landscape: Ratio 2:1 (4 cols, 3 rows * 3/2 card ratio = 12w/6h reduced to 2/1)
+     Landscape: Ratio 2:1
      Width <= 80vw
-     Height = Width * 0.5 <= 80vh => Width <= 160vh
-     So Width = min(80vw, 160vh)
+     Height = Width * 0.5 <= 70vh => Width <= 140vh
+     So Width = min(80vw, 140vh)
   */
   .board.landscape {
      grid-template-columns: repeat(4, 1fr);
+     grid-template-rows: repeat(3, 1fr);
      aspect-ratio: 2 / 1;
-     width: min(80vw, 160vh);
-     height: auto;
+     /* Strict dimensions matching 2:1 ratio constrained by 65vh height */
+     width: min(80vw, 130vh);
+     height: min(40vw, 65vh);
   }
   
   .card-wrapper {

@@ -1,5 +1,7 @@
 import { test, expect, Page } from '@playwright/test';
 import { createScreenshotHelper } from '../helpers/screenshot-helper';
+import { TestDocumentationHelper } from '../helpers/test-documentation-helper';
+import * as path from 'path';
 
 async function verifyCardsWithinBounds(page: Page) {
     const viewport = page.viewportSize();
@@ -22,35 +24,64 @@ async function verifyCardsWithinBounds(page: Page) {
 
         // Check all corners
         // Top-Left
-        expect(box.x, `Card ${i} X < 10%`).toBeGreaterThanOrEqual(marginX);
-        expect(box.y, `Card ${i} Y < 10%`).toBeGreaterThanOrEqual(marginY);
+        expect(box.x, `Card ${i} X < 10%`).toBeGreaterThanOrEqual(marginX - 1); // Allow small rounding error
+        expect(box.y, `Card ${i} Y < 10%`).toBeGreaterThanOrEqual(marginY - 1);
 
         // Bottom-Right
-        expect(box.x + box.width, `Card ${i} Right > 90%`).toBeLessThanOrEqual(width - marginX);
-        expect(box.y + box.height, `Card ${i} Bottom > 90%`).toBeLessThanOrEqual(height - marginY);
+        expect(box.x + box.width, `Card ${i} Right > 90%`).toBeLessThanOrEqual(width - marginX + 1);
+        expect(box.y + box.height, `Card ${i} Bottom > 90%`).toBeLessThanOrEqual(height - marginY + 1);
     }
 }
 
-test('Viewport Verification: Landscape', async ({ page }, testInfo) => {
+test('Viewport Verification', async ({ page }, testInfo) => {
     const screenshots = createScreenshotHelper(testInfo);
-    // Default landscape: 1280x720
+    const docHelper = new TestDocumentationHelper(path.dirname(testInfo.file));
+
+    docHelper.setMetadata(
+        "Viewport Boundary Verification",
+        "Verifies that the game board and cards strictly fit within the 80% safe zone (10% margins) in both Landscape and Portrait orientations."
+    );
+
+    // 1. Landscape Verification
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.goto('/');
+
+    // Players must join
+    await page.click('.bottom button.join');
+    await page.click('.top button.join');
+
     await page.click('button:has-text("Start Game")');
 
-    await screenshots.capture(page, "landscape-bounds", {
+    // Wait for board to acquire landscape class (reactivity check)
+    await expect(page.locator('.board')).toHaveClass(/landscape/);
+    // Wait a bit for layout reflow
+    await page.waitForTimeout(500);
+
+    const landscapeVerifications = [
+        { description: 'Viewport set to 1280x720', check: async () => { } },
+        { description: 'All cards within 10-90% bounds', check: async () => { } }
+    ];
+    docHelper.addStep("Landscape Orientation", "001-landscape.png", landscapeVerifications);
+
+    await screenshots.capture(page, "landscape", {
         programmaticCheck: async () => await verifyCardsWithinBounds(page)
     });
-});
 
-test('Viewport Verification: Portrait', async ({ page }, testInfo) => {
-    const screenshots = createScreenshotHelper(testInfo);
-    // Portrait: 720x1280
+    // 2. Portrait Verification
     await page.setViewportSize({ width: 720, height: 1280 });
-    await page.goto('/');
-    await page.click('button:has-text("Start Game")');
+    // Wait for board to acquire portrait class
+    await expect(page.locator('.board')).toHaveClass(/portrait/);
+    await page.waitForTimeout(500); // Small buffer for layout shift
 
-    await screenshots.capture(page, "portrait-bounds", {
+    const portraitVerifications = [
+        { description: 'Viewport set to 720x1280', check: async () => { } },
+        { description: 'All cards within 10-90% bounds', check: async () => { } }
+    ];
+    docHelper.addStep("Portrait Orientation", "002-portrait.png", portraitVerifications);
+
+    await screenshots.capture(page, "portrait", {
         programmaticCheck: async () => await verifyCardsWithinBounds(page)
     });
+
+    docHelper.writeReadme();
 });
