@@ -62,7 +62,14 @@ test('Viewport Verification', async ({ page }, testInfo) => {
 
     // Capture first, get filename
     const landscapeShot = await screenshots.capture(page, "landscape", {
-        programmaticCheck: async () => await verifyCardsWithinBounds(page)
+        programmaticCheck: async () => {
+            await verifyCardsWithinBounds(page);
+            // Verify controls are visible
+            await expect(page.locator('.control-bottom')).toBeVisible();
+            await expect(page.locator('.control-top')).toBeVisible();
+            await expect(page.locator('.control-left')).toBeVisible();
+            await expect(page.locator('.control-right')).toBeVisible();
+        }
     });
 
     docHelper.addStep("Landscape Orientation", landscapeShot, landscapeVerifications);

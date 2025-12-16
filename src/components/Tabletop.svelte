@@ -107,13 +107,13 @@
           <GameControls message={state.message} />
       </div>
       <div class="control-wrapper control-top">
-          <GameControls message={state.message} rotation={180} />
+          <GameControls message={state.message} />
       </div>
       <div class="control-wrapper control-left">
-          <GameControls message={state.message} rotation={90} />
+          <GameControls message={state.message} />
       </div>
       <div class="control-wrapper control-right">
-          <GameControls message={state.message} rotation={-90} />
+          <GameControls message={state.message} />
       </div>
     {/if}
   </div>
@@ -160,8 +160,11 @@
       position: relative;
       width: 100vw;
       height: 100vh;
-      background: radial-gradient(circle, #27ae60 20%, #1e8449 100%); /* Green felt fallback/gradient */
-      /* Add a subtle texture if desired, but this mimics felt well enough with radial gradient for now */
+      background-color: #27ae60;
+      /* Felt texture: subtle noise + radial vignette */
+      background-image: 
+          radial-gradient(circle at center, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
       overflow: hidden;
       display: flex;
       justify-content: center;
@@ -186,10 +189,9 @@
       align-items: center;
       z-index: 10;
       position: relative;
-      pointer-events: none; /* Let clicks pass through to board if needed, but board is child... wait. */
+      pointer-events: none;
   }
   
-  /* Make sure GameBoard is interactive */
   :global(.board) {
       pointer-events: auto;
   }
@@ -197,14 +199,43 @@
   .control-wrapper {
       position: absolute;
       z-index: 20;
-      pointer-events: none; /* Wrapper shouldn't block, children should */
+      pointer-events: none;
+      
+      /* Square wrapper for consistent rotation handling */
+      width: 160px;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
   }
   
-  /* Positioning controls near HUDs */
-  /* Assuming HUDs are centered on edges */
+  /* 
+     Positioning:
+     Corners relative to player HUDs so they are always "to the right" of the player.
+     Consistent corner placement using the square wrapper strategy.
+  */
+
+  .control-bottom { 
+      bottom: 20px; 
+      right: 20px; 
+      /* No rotation needed */
+  }
   
-  .control-bottom { bottom: 20px; right: 20px; }
-  .control-top { top: 20px; left: 20px; }
-  .control-left { left: 20px; bottom: 20px; }
-  .control-right { right: 20px; top: 20px; }
+  .control-top { 
+      top: 20px; 
+      left: 20px; 
+      transform: rotate(180deg);
+  }
+  
+  .control-left { 
+      bottom: 20px; 
+      left: 20px; 
+      transform: rotate(90deg);
+  }
+  
+  .control-right { 
+      top: 20px; 
+      right: 20px; 
+      transform: rotate(-90deg);
+  }
 </style>
