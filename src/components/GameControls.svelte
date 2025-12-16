@@ -15,6 +15,7 @@
         <button class="btn" on:click={() => store.dispatch(dealMore())}>Deal 3</button>
         <button class="btn reset" on:click={() => store.dispatch(resetGame())}>Reset</button>
     </div>
+    <button class="btn exit" on:click={() => window.close()}>Exit</button>
 </div>
 
 <style>
@@ -59,5 +60,15 @@
   
   .reset {
       color: #c0392b;
+  }
+
+  .exit {
+      background: #95a5a6;
+      color: white;
+      width: 100%;
+  }
+  
+  .exit:hover {
+      background: #7f8c8d;
   }
 </style>
