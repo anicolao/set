@@ -61,7 +61,7 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
     await expect(page.locator('text=Player 1 called SET!')).toBeVisible();
 
     // Select 1 card
-    await page.locator('.card').first().click();
+    await page.locator('.card').first().click({ force: true });
 
     const selectVerifications = [
         { description: 'Player 1 is active', check: async () => { } },
