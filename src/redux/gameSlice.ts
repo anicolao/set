@@ -204,9 +204,19 @@ const gameSlice = createSlice({
             state.turnExpiresAt = null;
             state.animatingResult = null;
             state.players.forEach(p => p.score = 0);
+        },
+        leaveGame: (state) => {
+            state.status = 'lobby';
+            state.board = [];
+            state.selection = [];
+            state.activePlayerId = null;
+            state.deck = [];
+            state.players = []; // CLEAR PLAYERS
+            state.turnExpiresAt = null;
+            state.animatingResult = null;
         }
     }
 });
 
-export const { addPlayer, startGame, selectCard, dealMore, resetGame, restartGame, claimTurn, resolveTurn, expireTurn } = gameSlice.actions;
+export const { addPlayer, startGame, selectCard, dealMore, resetGame, restartGame, claimTurn, resolveTurn, expireTurn, leaveGame } = gameSlice.actions;
 export default gameSlice.reducer;
