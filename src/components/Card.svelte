@@ -37,6 +37,11 @@
       return `url(#${fillId})`;
   }
   
+  function handlePointerDown(e: PointerEvent) {
+      e.preventDefault();
+      handleClick();
+  }
+
   function handleClick() {
       dispatch('click', { id: card.id });
   }
@@ -86,7 +91,7 @@
 
 <div 
   class="card {orientation} {selected ? 'selected' : ''} {invalid ? 'invalid' : ''} {flying ? `flying fly-${flyDirection}` : ''}" 
-  on:click={handleClick}
+  on:pointerdown={handlePointerDown}
   on:keydown={(e) => e.key === 'Enter' && handleClick()}
   role="button"
   tabindex="0"

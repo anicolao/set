@@ -46,7 +46,7 @@
 
 <div class="hud {position}" style="transform: rotate({rotation}deg)">
   {#if !isJoined}
-    <button class="btn join" on:click={() => dispatch('join', { position })}>
+    <button class="btn join" on:pointerdown|preventDefault={() => dispatch('join', { position })}>
       Join Game
     </button>
   {:else if player}
@@ -59,7 +59,7 @@
        <button 
          class="btn set" 
          disabled={isActive}
-         on:click={() => dispatch('claimSet', { playerId: player.id })}
+         on:pointerdown|preventDefault={() => dispatch('claimSet', { playerId: player.id })}
        >
          SET!
        </button>

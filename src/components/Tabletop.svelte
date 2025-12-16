@@ -89,7 +89,7 @@
       <div class="lobby">
         <h1 style="font-size: 3rem; margin-bottom: 20px; color: #2c3e50;">Set</h1>
         <p style="margin-bottom: 30px; font-size: 1.2rem;">Gather 3 symbols that make a Set.</p>
-        <button class="btn-start" on:click={() => store.dispatch(startGame())} disabled={state.players.length < 1}>
+        <button class="btn-start" on:pointerdown|preventDefault={() => store.dispatch(startGame())} disabled={state.players.length < 1}>
           Start Game
         </button>
       </div>
