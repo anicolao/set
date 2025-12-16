@@ -43,6 +43,8 @@
   const POSITIONS = ['bottom', 'top', 'left', 'right'] as const;
 </script>
 
+<svelte:window bind:innerWidth bind:innerHeight />
+
 <div class="tabletop">
   <div class="center">
     {#if state.status === 'lobby'}
@@ -57,6 +59,7 @@
       <GameBoard 
         cards={state.board} 
         selection={state.selection}
+        orientation={orientation}
         on:select={handleSelect}
       />
       
@@ -97,5 +100,19 @@
   
   .lobby {
     text-align: center;
+  }
+
+  .center {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+  }
+  
+  .center > * {
+      pointer-events: auto;
   }
 </style>
