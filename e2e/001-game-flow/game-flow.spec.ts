@@ -71,6 +71,10 @@ test('Game Flow: Join, Start, Play', async ({ page }, testInfo) => {
     await screenshots.capture(page, "selecting", {
         programmaticCheck: async () => {
             await expect(page.locator('.card').first()).toHaveClass(/selected/);
+            // Verify orientation class depending on default view?
+            // Playwright default view is usually landscapish (1280x720).
+            // So expected class is .card.landscape
+            // await expect(page.locator('.card').first()).toHaveClass(/landscape/);
         }
     });
 
