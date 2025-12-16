@@ -235,7 +235,7 @@ test.describe('Complete Playthrough', () => {
                 if (currentSetIds && cards.length >= 12) {
                     const dealButton = page.locator('button:has-text("Deal More")');
                     await dealButton.click();
-                    await expect(page.locator('.controls')).toContainText("There is a set on the board!");
+                    await expect(page.locator('.message')).toContainText("There is a set on the board!");
                 }
 
             } else {

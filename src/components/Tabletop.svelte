@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
+
   import { store } from '../redux/store';
-  import { addPlayer, startGame, selectCard, resetGame, dealMore, claimTurn } from '../redux/gameSlice';
+  import { addPlayer, startGame, selectCard, resetGame, dealMore, claimTurn, rematch } from '../redux/gameSlice';
   import GameBoard from './GameBoard.svelte';
   import PlayerHud from './PlayerHud.svelte';
+  import GameOverDialog from './GameOverDialog.svelte';
   
   let innerWidth = 0;
   let innerHeight = 0;
@@ -47,6 +49,14 @@
 
 <svelte:window bind:innerWidth bind:innerHeight />
 
+{#if state.status === 'game_over'}
+  <GameOverDialog 
+     players={state.players} 
+     on:rematch={() => store.dispatch(rematch())} 
+     on:restart={() => store.dispatch(resetGame())}
+  />
+{/if}
+
 <div class="tabletop">
   <div class="center">
     {#if state.status === 'lobby'}
@@ -65,10 +75,16 @@
         on:select={handleSelect}
       />
       
-      <div class="controls">
-         <div>Message: {state.message || ''}</div>
-         <button on:click={() => store.dispatch(dealMore())}>Deal More</button>
-         <button on:click={() => store.dispatch(resetGame())}>Reset</button>
+      <div class="controls-overlay">
+          <div class="message">{state.message || ''}</div>
+          
+          <button class="control-btn top-right" on:click={() => store.dispatch(resetGame())}>
+              Reset Game
+          </button>
+          
+          <button class="control-btn bottom-right" on:click={() => store.dispatch(dealMore())}>
+              Deal More
+          </button>
       </div>
     {/if}
   </div>
@@ -119,5 +135,60 @@
       box-sizing: border-box;
   }
   
-  /* .center > * removed as not needed */
+  /* Absolute Controls */
+  .controls-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* Let clicks pass through to board */
+  }
+  
+  .message {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.9);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: bold;
+      pointer-events: auto;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  }
+  
+  .control-btn {
+      position: absolute;
+      pointer-events: auto;
+      z-index: 20;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #34495e;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: transform 0.1s;
+  }
+  
+  .control-btn:hover {
+      transform: scale(1.05);
+  }
+  
+  /* Positions - avoid HUDs */
+  /* Top Right corner */
+  .top-right {
+      top: 20px;
+      right: 20px;
+  }
+  
+  /* Bottom Right corner */
+  .bottom-right {
+      bottom: 20px;
+      right: 20px;
+      background: #e67e22; /* Different color for primary action */
+  }
 </style>

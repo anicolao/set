@@ -149,15 +149,25 @@ const gameSlice = createSlice({
                 }
             }
         },
+
         resetGame: (state) => {
             state.status = 'lobby';
             state.board = [];
             state.selection = [];
             state.activePlayerId = null;
             state.players.forEach(p => p.score = 0);
+        },
+        rematch: (state) => {
+            state.deck = generateDeck();
+            state.board = state.deck.splice(0, 12);
+            state.status = 'playing';
+            state.selection = [];
+            state.activePlayerId = null;
+            state.message = 'Rematch Started! Select 3 cards.';
+            state.players.forEach(p => p.score = 0);
         }
     }
 });
 
-export const { addPlayer, startGame, selectCard, dealMore, resetGame, claimTurn } = gameSlice.actions;
+export const { addPlayer, startGame, selectCard, dealMore, resetGame, claimTurn, rematch } = gameSlice.actions;
 export default gameSlice.reducer;
