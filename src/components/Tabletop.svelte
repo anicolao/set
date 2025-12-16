@@ -104,6 +104,7 @@
     text-align: center;
   }
 
+
   .center {
       width: 100%;
       height: 100%;
@@ -113,6 +114,9 @@
       align-items: center;
       z-index: 10;
       position: relative;
+      /* Reserve space for HUDs so board doesn't overlap */
+      padding: 120px 140px; 
+      box-sizing: border-box;
   }
   
   /* .center > * removed as not needed */

@@ -1,5 +1,9 @@
 
+
 import { test, expect, Page } from '@playwright/test';
+import { createScreenshotHelper } from '../helpers/screenshot-helper';
+import { TestDocumentationHelper } from '../helpers/test-documentation-helper';
+import * as path from 'path';
 
 // --- Game Logic Replication ---
 
@@ -66,12 +70,30 @@ async function getBoardCards(page: Page): Promise<Card[]> {
 }
 
 test.describe('Complete Playthrough', () => {
-    test.setTimeout(120000); // Allow 2 minutes for a full game
+    test.setTimeout(180000); // Allow 3 minutes for a full game with screenshots
 
-    test('play a full game with 2 players', async ({ page }) => {
+    test('play a full game with 2 players', async ({ page }, testInfo) => {
+        const screenshots = createScreenshotHelper(testInfo);
+        const docHelper = new TestDocumentationHelper(path.dirname(testInfo.file));
+
+        docHelper.setMetadata(
+            "Seeded Playthrough Verification",
+            "Verifies a complete game playthrough with two players using a deterministic seed. Validates game logic, turn taking, and win conditions."
+        );
+
+
         // 1. Setup: Load game with specific seed
         console.log("Navigating to game with seed...");
         await page.goto('/?seed=playthrough-seed-12345');
+
+        await screenshots.capture(page, 'initial-load', {
+            programmaticCheck: async () => {
+                await expect(page.locator('.lobby')).toBeVisible();
+            }
+        });
+        docHelper.addStep("Initial Load", "000-initial-load.png", [
+            { description: "Lobby is visible" }
+        ]);
 
         // 2. Players Join
         console.log("Joining players...");
@@ -79,18 +101,42 @@ test.describe('Complete Playthrough', () => {
         const p2Join = page.locator('.top button.join');
 
         await p1Join.click();
-        await expect(page.locator('.bottom .name')).toContainText('Player 1');
 
-
-        // Wait a beat before joining player 2 to avoid any race conditions if they exist
+        await screenshots.capture(page, 'player-1-joined', {
+            programmaticCheck: async () => {
+                await expect(page.locator('.bottom .name')).toContainText('Player 1');
+            }
+        });
+        docHelper.addStep("Player 1 Joined", "001-player-1-joined.png", [
+            { description: "Player 1 HUD shows name" }
+        ]);
 
         await p2Join.click();
-        await expect(page.locator('.top .name')).toContainText('Player 2');
+
+        await screenshots.capture(page, 'player-2-joined', {
+            programmaticCheck: async () => {
+                await expect(page.locator('.top .name')).toContainText('Player 2');
+            }
+        });
+        docHelper.addStep("Player 2 Joined", "002-player-2-joined.png", [
+            { description: "Player 2 HUD shows name" }
+        ]);
 
         // 3. Start Game
         console.log("Starting game...");
         await page.click('button:has-text("Start Game")');
-        await expect(page.locator('.board')).toBeVisible();
+
+        await screenshots.capture(page, 'game-started', {
+            programmaticCheck: async () => {
+                await expect(page.locator('.board')).toBeVisible();
+                const count = await page.locator('.card').count();
+                expect(count).toBe(12);
+            }
+        });
+        docHelper.addStep("Game Started", "003-game-started.png", [
+            { description: "Board is visible" },
+            { description: "12 cards are dealt" }
+        ]);
 
         let gameActive = true;
         let turnCount = 0;
@@ -120,14 +166,24 @@ test.describe('Complete Playthrough', () => {
 
                 // Select cards
                 console.log(`Turn ${turnCount}: Selecting cards...`);
-                for (const id of setIds) {
+                for (let i = 0; i < setIds.length; i++) {
+                    const id = setIds[i];
 
-                    // Force click to ensure valid interaction even if layout is tight
+
+
                     const cardLocator = page.locator(`div[data-testid="${id}"]`);
-                    await cardLocator.click({ force: true });
-                    // Verify selection state instead of waiting
-                    // Note: Class might be 'card selected ...'
-                    await expect(cardLocator).toHaveClass(/selected/);
+
+                    // Click top-left to avoid potential overlap with HUDs
+                    await cardLocator.click({ position: { x: 10, y: 10 } });
+
+                    // Long delay to ensure state settles
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    // Only verify selection for the first 2 cards. 
+                    // The 3rd card click immediately triggers set processing/removal.
+                    if (i < 2) {
+                        await expect(cardLocator).toHaveClass(/selected/);
+                    }
                 }
 
                 // Wait for cards to be replaced or removed
@@ -135,7 +191,8 @@ test.describe('Complete Playthrough', () => {
                     // Fail fast if Invalid Set detected
                     if (await page.locator('text=Invalid Set!').isVisible()) {
                         console.error('Invalid Set detected!');
-                        // Capture snapshot if possible or just throw
+                        // Capture failure state
+                        await screenshots.capture(page, `turn-${turnCount}-invalid`, {});
                         throw new Error("Game reported Invalid Set!");
                     }
 
@@ -143,20 +200,28 @@ test.describe('Complete Playthrough', () => {
                     const currentIds = currentCards.map(c => c.id);
                     // Check if *any* of the set cards are missing
                     const anyMissing = setIds.some(id => !currentIds.includes(id));
-                    if (!anyMissing) {
-                        console.log("Waiting for cards to disappear... Current Board:", currentIds.length);
-                    }
+
                     expect(anyMissing).toBe(true);
                 }).toPass({ timeout: 5000 });
+
+                // Capture turn result
+                // We limit screenshots to first 3 turns and then every 5th turn to avoid exploding file count?
+                // User said "every step". Let's do every turn. The index auto-increments.
+                await screenshots.capture(page, `turn-${turnCount}-complete`, {
+                    programmaticCheck: async () => {
+                        const currentCards = await getBoardCards(page);
+                        const setStillPresent = setIds.every(id => currentCards.find(c => c.id === id));
+                        expect(setStillPresent).toBe(false);
+                    }
+                });
+                docHelper.addStep(`Turn ${turnCount} Complete`, `${String(screenshots['count'] - 1).padStart(3, '0')}-turn-${turnCount}-complete.png`, [
+                    { description: `${playerName} found a set: ${setIds.join(', ')}` },
+                    { description: "Cards were removed/replaced" }
+                ]);
+
                 // Check if we can deal more
                 const dealButton = page.locator('button:has-text("Deal More")');
-                const isDisabled = await dealButton.isDisabled(); // Or check visibility? 
-
-                // App.svelte: <button on:click={() => store.dispatch(dealMore())}>Deal More</button>
-                // It doesn't explicitly disable unless deck is empty? 
-                // redux/gameSlice.ts: `if (state.deck.length >= 3)`
-                // But the UI doesn't show deck count directly?
-                // Wait, if no set on board, usually we must deal more.
+                const isDisabled = await dealButton.isDisabled();
 
                 // Try dealing more
                 if (!isDisabled) {
@@ -167,11 +232,17 @@ test.describe('Complete Playthrough', () => {
                     // Verify board size increased?
                     await new Promise(resolve => setTimeout(resolve, 500));
                     const newCount = await page.locator('.card').count();
+
+                    if (newCount > cards.length) {
+                        // We dealt more cards
+                        await screenshots.capture(page, `turn-${turnCount}-dealt-more`, {});
+                        docHelper.addStep(`Turn ${turnCount} Dealt More`, `${String(screenshots['count'] - 1).padStart(3, '0')}-turn-${turnCount}-dealt-more.png`, [
+                            { description: "Board size increased" }
+                        ]);
+                    }
+
                     if (newCount <= cards.length) {
                         // Deck empty and no sets -> Game Over condition?
-                        // Current logic doesn't seemingly have explicit "Game Over" screen in `App.svelte` other than reset?
-                        // It just stops?
-                        // If no sets and no cards in deck, game is effectively over.
                         console.log("Deck empty and no sets found. Game Over.");
                         gameActive = false;
                     }
@@ -179,6 +250,9 @@ test.describe('Complete Playthrough', () => {
                     console.log("Deal More disabled. Game Over.");
                     gameActive = false;
                 }
+            } else {
+                console.log("No sets found on board (and deal more failed logic?). Game Over.");
+                gameActive = false;
             }
 
             // fail safe for infinite loop
@@ -196,6 +270,15 @@ test.describe('Complete Playthrough', () => {
         const p1Score = parseInt(p1ScoreText?.replace('Score: ', '') || '0');
         const p2Score = parseInt(p2ScoreText?.replace('Score: ', '') || '0');
 
-        expect(p1Score + p2Score).toBeGreaterThan(0);
+        await screenshots.capture(page, 'game-over', {
+            programmaticCheck: async () => {
+                expect(p1Score + p2Score).toBeGreaterThan(0);
+            }
+        });
+        docHelper.addStep("Game Over", `${String(screenshots['count'] - 1).padStart(3, '0')}-game-over.png`, [
+            { description: `Final Scores: P1=${p1Score}, P2=${p2Score}` }
+        ]);
+
+        docHelper.writeReadme();
     });
 });
