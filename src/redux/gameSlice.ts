@@ -129,7 +129,7 @@ const gameSlice = createSlice({
                 const newBoard = [...state.board];
 
                 cardIds.forEach(id => {
-                    const idx = newBoard.findIndex(c => c.id === id);
+                    const idx = newBoard.findIndex(c => c && c.id === id);
                     if (idx !== -1) {
                         if (needsReplacement && state.deck.length > 0) {
                             newBoard[idx] = state.deck.pop()!;
