@@ -140,8 +140,11 @@ test.describe('Complete Playthrough', () => {
 
         let gameActive = true;
         let turnCount = 0;
+        const turnTimings: number[] = [];
+        const testStartTime = Date.now();
 
         while (gameActive) {
+            const turnStartTime = Date.now();
             turnCount++;
 
             // Get current board state
@@ -228,6 +231,11 @@ test.describe('Complete Playthrough', () => {
                     { description: "Cards were removed/replaced" }
                 ]);
 
+                // Record turn timing
+                const turnDuration = Date.now() - turnStartTime;
+                turnTimings.push(turnDuration);
+                console.log(`Turn ${turnCount} completed in ${turnDuration}ms`);
+
 
                 // Check Deal More is BLOCKED when a set exists
                 // We must use the CURRENT board state (post-replacement)
@@ -241,13 +249,31 @@ test.describe('Complete Playthrough', () => {
             } else {
                 console.log(`Turn ${turnCount}: No sets found on board. Attempting to Deal More.`);
 
+                // Check if game is already over (overlay might be visible)
+                const overlayVisible = await page.locator('.overlay').isVisible();
+                if (overlayVisible && await page.locator('.overlay h1:has-text("Game Over!")').isVisible()) {
+                    console.log("Game Over detected via overlay.");
+                    gameActive = false;
+                    continue;
+                }
+
                 // Try dealing more
                 const dealButton = page.locator('button:has-text("Deal More")');
 
                 // If deck is empty, this logic might need adjustment depending on UI state.
                 // Assuming button is always clickable but logic handles it.
 
-                await dealButton.click();
+                try {
+                    await dealButton.click({ timeout: 2000 });
+                } catch (e) {
+                    // Click failed, probably due to overlay
+                    if (await page.locator('.overlay h1:has-text("Game Over!")').isVisible()) {
+                        console.log("Game Over detected after Deal More click failed.");
+                        gameActive = false;
+                        continue;
+                    }
+                    throw e;
+                }
 
                 // Wait for potential board update
                 await new Promise(resolve => setTimeout(resolve, 500));
@@ -262,6 +288,11 @@ test.describe('Complete Playthrough', () => {
                     docHelper.addStep(`Turn ${turnCount} Dealt More`, `${String(screenshots['count'] - 1).padStart(3, '0')}-turn-${turnCount}-dealt-more.png`, [
                         { description: "Board size increased" }
                     ]);
+
+                    // Record turn timing
+                    const turnDuration = Date.now() - turnStartTime;
+                    turnTimings.push(turnDuration);
+                    console.log(`Turn ${turnCount} (Deal More) completed in ${turnDuration}ms`);
                 } else {
                     // Did not increase.
                     // Check for Game Over message
@@ -314,6 +345,21 @@ test.describe('Complete Playthrough', () => {
         docHelper.addStep("Game Over", `${String(screenshots['count'] - 1).padStart(3, '0')}-game-over.png`, [
             { description: `Final Scores: P1=${p1Score}, P2=${p2Score}` }
         ]);
+
+        // Calculate and report timing statistics
+        const testDuration = Date.now() - testStartTime;
+        const avgTurnTime = turnTimings.reduce((a, b) => a + b, 0) / turnTimings.length;
+        const minTurnTime = Math.min(...turnTimings);
+        const maxTurnTime = Math.max(...turnTimings);
+
+        console.log('\n========== TIMING REPORT ==========');
+        console.log(`Total Test Duration: ${testDuration}ms (${(testDuration / 1000).toFixed(2)}s)`);
+        console.log(`Total Turns: ${turnCount}`);
+        console.log(`Average Time per Turn: ${avgTurnTime.toFixed(2)}ms`);
+        console.log(`Min Turn Time: ${minTurnTime}ms`);
+        console.log(`Max Turn Time: ${maxTurnTime}ms`);
+        console.log(`Per-Turn Timings: ${turnTimings.map((t, i) => `Turn ${i + 1}: ${t}ms`).join(', ')}`);
+        console.log('===================================\n');
 
         docHelper.writeReadme();
     });
