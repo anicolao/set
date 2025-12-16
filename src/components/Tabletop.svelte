@@ -2,7 +2,7 @@
   import { onMount, createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import { store } from '../redux/store';
-  import { addPlayer, startGame, selectCard, dealMore, claimTurn, resolveTurn, expireTurn, resetGame, restartGame } from '../redux/gameSlice';
+  import { addPlayer, startGame, selectCard, dealMore, claimTurn, resolveTurn, expireTurn, resetGame, restartGame, leaveGame } from '../redux/gameSlice';
   import GameBoard from './GameBoard.svelte';
   import PlayerHud from './PlayerHud.svelte';
   import GameControls from './GameControls.svelte';
@@ -98,7 +98,7 @@
             players={state.players}
             winnerId={[...state.players].sort((a,b) => b.score - a.score)[0]?.id} 
             on:rematch={() => store.dispatch(restartGame())}
-            on:lobby={() => store.dispatch(resetGame())}
+            on:lobby={() => store.dispatch(leaveGame())}
         />
         <GameBoard 
             cards={state.board} 
