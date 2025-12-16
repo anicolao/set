@@ -27,8 +27,8 @@
     </div>
 
     <div class="actions">
-      <button class="primary" on:click={() => dispatch('rematch')}>Rematch</button>
-      <button class="secondary" on:click={() => dispatch('lobby')}>Back to Lobby</button>
+      <button class="primary" on:pointerdown|preventDefault={() => dispatch('rematch')}>Rematch</button>
+      <button class="secondary" on:pointerdown|preventDefault={() => dispatch('lobby')}>Back to Lobby</button>
     </div>
   </div>
 </div>
