@@ -233,7 +233,13 @@ test.describe('Complete Playthrough', () => {
                 // if (currentSetIds && cards.length >= 12) { ... }
 
             } else {
-                console.log(`Turn ${turnCount}: No sets found on board. Attempting to Deal 3.`);
+                console.log(`Turn ${turnCount}: No sets found on board. Checking for Game Over or Deal 3.`);
+
+                if (await page.locator('.dialog h1').isVisible()) {
+                    console.log("Game Over dialog detected.");
+                    gameActive = false;
+                    continue;
+                }
 
                 // Try dealing more
                 const dealButton = page.locator('button:has-text("Deal 3")').first();
@@ -302,6 +308,9 @@ test.describe('Complete Playthrough', () => {
         await screenshots.capture(page, 'game-over', {
             programmaticCheck: async () => {
                 expect(p1Score + p2Score).toBeGreaterThan(0);
+                await expect(page.locator('.dialog h1')).toHaveText("Game Over!");
+                await expect(page.locator('.dialog .player-row')).toHaveCount(2);
+                await expect(page.locator('.dialog .winner')).toBeVisible();
             }
         });
         docHelper.addStep("Game Over", `${String(screenshots['count'] - 1).padStart(3, '0')}-game-over.png`, [

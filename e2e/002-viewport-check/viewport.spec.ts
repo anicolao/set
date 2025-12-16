@@ -44,7 +44,7 @@ test('Viewport Verification', async ({ page }, testInfo) => {
 
     // 1. Landscape Verification
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto('/');
+    await page.goto('/?seed=e2e-viewport');
 
     // Players must join
     await page.click('.bottom button.join');
@@ -96,7 +96,7 @@ test('Viewport Verification', async ({ page }, testInfo) => {
 test('Dynamic Resize Verification', async ({ page }) => {
     // Start Landscape
     await page.setViewportSize({ width: 1280, height: 720 });
-    await page.goto('/');
+    await page.goto('/?seed=e2e-viewport-resize');
 
     // Players join to make HUD active/visible state relevant
     await page.click('.bottom button.join');
