@@ -1,47 +1,40 @@
-# Svelte + TS + Vite
+# Set - Tabletop Card Matching Game
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+A full-screen web application implementation of the classic card matching game "Set" designed for tabletop touchscreen devices.
 
-## Recommended IDE Setup
+## About
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+This is a digital implementation of the popular card game [Set](https://en.wikipedia.org/wiki/Set_(card_game)), where players race to identify sets of three cards that satisfy specific matching criteria. Each card has four attributes (shape, color, number, and shading), and a valid set requires that for each attribute, the three cards must be either all the same or all different.
 
-## Need an official Svelte framework?
+## Tabletop Experience
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+This application is specifically designed for large touchscreen formfactor displays where players gather around all edges of the digital table. The interface supports:
 
-## Technical considerations
+- **Full-screen immersive gameplay** optimized for tabletop displays
+- **Multi-directional interface** allowing players to sit at any edge of the table
+- **Simultaneous multi-player interaction** - multiple players can interact with the game at the same time
+- **Touch-optimized controls** for natural card selection and gameplay
 
-**Why use this over SvelteKit?**
+## Features
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+- Classic Set card game rules and mechanics
+- Real-time simultaneous gameplay for multiple players
+- Designed for collaborative and competitive play around a shared screen
+- Intuitive touch-based card selection
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+## Target Platform
 
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+Large touchscreen tabletop devices (digital tables, interactive displays, touch-enabled monitors in table configuration)
 
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
+## Development
 
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
+```bash
+npm install
+npm run dev
+```
 
-**Why include `.vscode/extensions.json`?**
+## Testing
 
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `allowJs` in the TS template?**
-
-While `allowJs: false` would indeed prevent the use of `.js` files in the project, it does not prevent the use of JavaScript syntax in `.svelte` files. In addition, it would force `checkJs: false`, bringing the worst of both worlds: not being able to guarantee the entire codebase is TypeScript, and also having worse typechecking for the existing JavaScript. In addition, there are valid use cases in which a mixed codebase may be relevant.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+```bash
+npx playwright test
 ```
