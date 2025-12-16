@@ -4,6 +4,9 @@
   
   export let card: Card;
   export let selected: boolean = false;
+  export let invalid: boolean = false;
+  export let flying: boolean = false;
+  export let flyDirection: 'bottom' | 'top' | 'left' | 'right' | null = null;
   export let orientation: 'landscape' | 'portrait' = 'portrait';
   
   const dispatch = createEventDispatcher();
@@ -82,7 +85,7 @@
 </script>
 
 <div 
-  class="card {orientation} {selected ? 'selected' : ''}" 
+  class="card {orientation} {selected ? 'selected' : ''} {invalid ? 'invalid' : ''} {flying ? `flying fly-${flyDirection}` : ''}" 
   on:click={handleClick}
   on:keydown={(e) => e.key === 'Enter' && handleClick()}
   role="button"
@@ -172,5 +175,45 @@
   .card-svg {
     width: 100%;
     height: 100%;
+  }
+
+  .invalid {
+    box-shadow: 0 0 20px #c0392b;
+    border: 2px solid #c0392b;
+    animation: shake 0.5s;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+  
+  .flying {
+      z-index: 100; /* Ensure on top */
+      pointer-events: none; /* No clicks */
+      animation-duration: 1s;
+      animation-fill-mode: forwards;
+      animation-timing-function: ease-in;
+  }
+  
+  .fly-bottom { animation-name: fly-bottom; }
+  .fly-top { animation-name: fly-top; }
+  .fly-left { animation-name: fly-left; }
+  .fly-right { animation-name: fly-right; }
+  
+  @keyframes fly-bottom {
+      to { transform: translateY(60vh) scale(0.5); opacity: 0; }
+  }
+  @keyframes fly-top {
+      to { transform: translateY(-60vh) scale(0.5); opacity: 0; }
+  }
+  @keyframes fly-left {
+      to { transform: translateX(-60vw) scale(0.5); opacity: 0; }
+  }
+  @keyframes fly-right {
+      to { transform: translateX(60vw) scale(0.5); opacity: 0; }
   }
 </style>

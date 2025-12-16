@@ -19,6 +19,8 @@ interface GameState {
     activePlayerId: string | null;
     selection: string[]; // card IDs
     message: string | null; // For UI feedback
+    turnExpiresAt: number | null;
+    animatingResult: { type: 'success' | 'failure', cardIds: string[], playerId: string } | null;
 }
 
 const initialState: GameState = {
@@ -28,7 +30,9 @@ const initialState: GameState = {
     players: [],
     activePlayerId: null,
     selection: [],
-    message: null
+    message: null,
+    turnExpiresAt: null,
+    animatingResult: null
 };
 
 const gameSlice = createSlice({
@@ -55,19 +59,26 @@ const gameSlice = createSlice({
             state.selection = [];
             state.activePlayerId = null;
             state.message = 'Game Started! Select 3 cards.';
+            state.turnExpiresAt = null;
+            state.animatingResult = null;
         },
         claimTurn: (state, action: PayloadAction<string>) => {
             // If someone is already active, ignore
             if (state.activePlayerId) return;
+            if (state.status !== 'playing') return;
 
             const playerId = action.payload;
             state.activePlayerId = playerId;
             state.selection = [];
             state.message = `${state.players.find(p => p.id === playerId)?.name} called SET!`;
-            // In a real game, set a timer here
+
+            // 10 second timer
+            state.turnExpiresAt = Date.now() + 10000;
         },
         selectCard: (state, action: PayloadAction<{ playerId: string, cardId: string }>) => {
             if (state.status !== 'playing') return;
+            if (state.animatingResult) return; // Block input during animation
+
             const { playerId, cardId } = action.payload;
 
             // STRICT MODE: Must have claimed turn first
@@ -85,43 +96,80 @@ const gameSlice = createSlice({
             // Check for set upon 3rd selection
             if (state.selection.length === 3) {
                 const selectedCards = state.board.filter(c => state.selection.includes(c.id));
+
                 if (selectedCards.length === 3) {
                     const [c1, c2, c3] = selectedCards;
-                    if (isValidSet(c1, c2, c3)) {
-                        // Found a set!
-                        const player = state.players.find(p => p.id === playerId);
-                        if (player) player.score += 1;
+                    const valid = isValidSet(c1, c2, c3);
 
-                        const needsReplacement = state.board.length <= 12 && state.deck.length > 0;
-
-                        // Create new board array to preserve order
-                        const newBoard = [...state.board];
-
-                        state.selection.forEach(id => {
-                            const idx = newBoard.findIndex(c => c.id === id);
-                            if (idx !== -1) {
-                                if (needsReplacement && state.deck.length > 0) {
-                                    newBoard[idx] = state.deck.pop()!;
-                                } else {
-                                    // Mark for removal
-                                    newBoard[idx] = null as any;
-                                }
-                            }
-                        });
-
-                        state.board = newBoard.filter(c => c !== null);
-                        state.message = 'Set Found!';
-                    } else {
-                        // Invalid Set
-                        const player = state.players.find(p => p.id === playerId);
-                        if (player) player.score = Math.max(0, player.score - 1);
-                        state.message = 'Invalid Set!';
-                    }
+                    // Enter animation state
+                    state.animatingResult = {
+                        type: valid ? 'success' : 'failure',
+                        cardIds: [...state.selection],
+                        playerId
+                    };
+                    state.turnExpiresAt = null; // Stop timer visual
+                } else {
+                    // Should happen rarely unless selection logic is buggy
+                    state.selection = [];
                 }
-                // Reset turn
-                state.activePlayerId = null;
-                state.selection = [];
             }
+        },
+        resolveTurn: (state) => {
+            if (!state.animatingResult) return;
+
+            const { type, cardIds, playerId } = state.animatingResult;
+            const player = state.players.find(p => p.id === playerId);
+
+            if (type === 'success') {
+                if (player) player.score += 1;
+                state.message = 'Set Found!';
+
+                const needsReplacement = state.board.length <= 12 && state.deck.length > 0;
+
+                const newBoard = [...state.board];
+
+                cardIds.forEach(id => {
+                    const idx = newBoard.findIndex(c => c.id === id);
+                    if (idx !== -1) {
+                        if (needsReplacement && state.deck.length > 0) {
+                            newBoard[idx] = state.deck.pop()!;
+                        } else {
+                            // Mark for removal
+                            newBoard[idx] = null as any;
+                        }
+                    }
+                });
+                state.board = newBoard.filter(c => c !== null);
+
+            } else {
+                // Failure
+                if (player) player.score = Math.max(0, player.score - 1);
+                state.message = 'Invalid Set!';
+            }
+
+            // Cleanup
+            state.animatingResult = null;
+            state.activePlayerId = null;
+            state.selection = [];
+            state.turnExpiresAt = null;
+
+            // Check for game over (optional, not requested)
+        },
+        expireTurn: (state) => {
+            if (!state.activePlayerId) return;
+
+            // Penalty for timeout? treating as invalid set for simplicity or just no score change?
+            // "add a time limit... pulsing faster... runs out".
+            // Implementation plan said "Apply penalty".
+            const player = state.players.find(p => p.id === state.activePlayerId);
+            if (player) {
+                player.score = Math.max(0, player.score - 1);
+            }
+            state.message = 'Time out!';
+
+            state.activePlayerId = null;
+            state.selection = [];
+            state.turnExpiresAt = null;
         },
         dealMore: (state) => {
             if (state.deck.length >= 3) {
@@ -134,9 +182,11 @@ const gameSlice = createSlice({
             state.selection = [];
             state.activePlayerId = null;
             state.players.forEach(p => p.score = 0);
+            state.turnExpiresAt = null;
+            state.animatingResult = null;
         }
     }
 });
 
-export const { addPlayer, startGame, selectCard, dealMore, resetGame, claimTurn } = gameSlice.actions;
+export const { addPlayer, startGame, selectCard, dealMore, resetGame, claimTurn, resolveTurn, expireTurn } = gameSlice.actions;
 export default gameSlice.reducer;
